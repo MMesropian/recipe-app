@@ -1,7 +1,7 @@
 package com.mmesropian.recipeapp.controllers;
 
 import com.mmesropian.recipeapp.domain.Recipe;
-Moimport com.mmesropian.recipeapp.services.RecipeService;
+import com.mmesropian.recipeapp.services.RecipeService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
