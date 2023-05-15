@@ -1,9 +1,13 @@
 package com.mmesropian.recipeapp.services;
 
+import com.mmesropian.recipeapp.commands.RecipeCommand;
+import com.mmesropian.recipeapp.converters.RecipeCommandToRecipe;
+import com.mmesropian.recipeapp.converters.RecipeToRecipeCommand;
 import com.mmesropian.recipeapp.domain.Recipe;
 import com.mmesropian.recipeapp.repositories.RecipeRepositories;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.spring5.processor.SpringValueTagProcessor;
 
 import java.util.HashSet;
@@ -15,9 +19,15 @@ import java.util.Set;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepositories recipeRepositories;
+    private final RecipeCommandToRecipe recipeCommandToRecipe;
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
 
-    public RecipeServiceImpl(RecipeRepositories recipeRepositories) {
+    public RecipeServiceImpl(RecipeRepositories recipeRepositories,
+                             RecipeCommandToRecipe recipeCommandToRecipe,
+                             RecipeToRecipeCommand recipeToRecipeCommand) {
         this.recipeRepositories = recipeRepositories;
+        this.recipeCommandToRecipe = recipeCommandToRecipe;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
     }
 
     @Override
@@ -45,5 +55,15 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         return recipeOptional.get();
+    }
+
+    @Transactional
+    @Override
+    public RecipeCommand saveRecipeCommand(RecipeCommand command) {
+        Recipe detacheRecipe = recipeCommandToRecipe.convert(command);
+        Recipe saveRecipe = recipeRepositories.save(detacheRecipe);
+        log.debug("Save RecipeId: " + saveRecipe.getId());
+
+        return recipeToRecipeCommand.convert(saveRecipe);
     }
 }
