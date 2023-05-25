@@ -92,8 +92,8 @@
                         <h5 class="card-title">Ingredients:</h5>
                     </div>
                     <div class="card-body text-secondary">
-                        <div class="col-md-3 form-group">
-                            <ul>
+                        <div class="col-md-12 form-group">
+                            <ul th:if="${not #lists.isEmpty(recipe.ingredients)}">
                                 <li th:remove="all">1 Cup of milk</li>
                                 <li th:remove="all">1 Teaspoon of chocolate</li>
                                 <li th:each="ingredient : ${recipe.ingredients}"

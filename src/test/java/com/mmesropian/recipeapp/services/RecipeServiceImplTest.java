@@ -1,5 +1,6 @@
 package com.mmesropian.recipeapp.services;
 
+import com.mmesropian.recipeapp.commands.RecipeCommand;
 import com.mmesropian.recipeapp.converters.RecipeCommandToRecipe;
 import com.mmesropian.recipeapp.converters.RecipeToRecipeCommand;
 import com.mmesropian.recipeapp.domain.Recipe;
@@ -33,19 +34,40 @@ class RecipeServiceImplTest {
     }
 
     @Test
-    void getRecipes() {
+    void getRecipesByIdTest() {
 
         Recipe recipe = new Recipe();
         HashSet recepiesData = new HashSet();
         recepiesData.add(recipe);
 
-        when(recipeService.getRecipes()).thenReturn(recepiesData);
+        when(recipeRepositories.findAll()).thenReturn(recepiesData);
         Set<Recipe> recipes = recipeService.getRecipes();
 
         assertEquals(recipes.size(),1);
         verify(recipeRepositories, times(1)).findAll();
         verify(recipeRepositories, never()).findById(anyLong());
     }
+
+    @Test
+    void getRecipeCommandByIdTest() {
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        Optional<Recipe> recipeOptional = Optional.of(recipe);
+
+        when(recipeRepositories.findById(anyLong())).thenReturn(recipeOptional);
+
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(1L);
+
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+        RecipeCommand recipeCommandById = recipeService.fimdCommandById(1L);
+
+        assertNotNull( recipeCommandById,"Null recipe returned");
+        verify(recipeRepositories, times(1)).findById(anyLong());
+        verify(recipeRepositories, never()).findAll();
+    }
+
     @Test
     void getRecipesById() {
 

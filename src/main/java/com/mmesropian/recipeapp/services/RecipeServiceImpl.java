@@ -8,7 +8,6 @@ import com.mmesropian.recipeapp.repositories.RecipeRepositories;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.spring5.processor.SpringValueTagProcessor;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -55,6 +54,12 @@ public class RecipeServiceImpl implements RecipeService {
         }
 
         return recipeOptional.get();
+    }
+
+    @Override
+    @Transactional
+    public RecipeCommand fimdCommandById(Long id) {
+        return recipeToRecipeCommand.convert(findById(id));
     }
 
     @Transactional
