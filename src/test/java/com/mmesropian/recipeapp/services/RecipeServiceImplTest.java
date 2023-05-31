@@ -61,7 +61,7 @@ class RecipeServiceImplTest {
 
         when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
 
-        RecipeCommand recipeCommandById = recipeService.fimdCommandById(1L);
+        RecipeCommand recipeCommandById = recipeService.findCommandById(1L);
 
         assertNotNull( recipeCommandById,"Null recipe returned");
         verify(recipeRepositories, times(1)).findById(anyLong());
